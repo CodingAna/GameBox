@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()"> <!-- https://stackoverflow.com/questions/69619035/error-with-permissions-policy-header-unrecognized-feature-interest-cohort -->
+    <link rel="stylesheet" href="./main.css">
+    <title>GameBox</title>
+  </head>
+  <body class="disable-select">
+    <div>
+      <canvas class="disable-select" id="canvas_static" width="100vh" height="100vh" style="background-color: gray; border-radius: 5px;"></canvas>
+      <canvas class="disable-select" id="canvas_dynamic" width="100vh" height="100vh" style="background-color: black; border-radius: 10px;"></canvas>
+    </div>
+    <script type="module">
+      import { OS } from "./OS.js";
+      // Import Games
+      // mport { GameX } from "./games/GameX.js";
+
+      let canvas = {
+        static: document.getElementById("canvas_static"),
+        dynamic: document.getElementById("canvas_dynamic"),
+      };
+      let context = {
+        static: canvas.static.getContext("2d"),
+        dynamic: canvas.dynamic.getContext("2d"),
+      };
+
+      let os = new OS(canvas.dynamic, context.dynamic);
+
+      // Static
+      canvas.static.width = os.screen.width + (os.screen.borderWidth * 2);
+      canvas.static.height = os.screen.height + (os.screen.borderHeight * 2);
+
+      canvas.static.style.position = "absolute";
+      canvas.static.style.left = (window.innerWidth / 2) - (os.screen.width / 2) - os.screen.borderWidth + "px";
+      canvas.static.style.top = (window.innerHeight / 2) - (os.screen.height / 2) - os.screen.borderHeight + "px";
+
+      // Dynamic
+      canvas.dynamic.width = os.screen.width;
+      canvas.dynamic.height = os.screen.height;
+
+      canvas.dynamic.style.position = "absolute";
+      canvas.dynamic.style.left = (window.innerWidth / 2) - (os.screen.width / 2) + "px";
+      canvas.dynamic.style.top = (window.innerHeight / 2) - (os.screen.height / 2)+ "px";
+
+      // Init listeners
+      /*
+      window.addEventListener("gamepadconnected",    event => {os.gamepadHandler(event, true );}, false);
+      window.addEventListener("gamepaddisconnected", event => {os.gamepadHandler(event, false);}, false);
+      */
+
+      window.addEventListener("keydown", event => {os.keyboardHandler(event);});
+
+      os.init();
+
+      /*
+      os.addApp("coinCollect", CoinCollect);
+      os.addApp("pong", Pong);
+      os.addApp("pongMP", PongMP);
+      */
+
+      os.start();
+    </script>
+  </body>
+</html>
